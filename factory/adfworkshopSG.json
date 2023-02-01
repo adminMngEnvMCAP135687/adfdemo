@@ -1,0 +1,9 @@
+{
+	"name": "adfworkshopSG",
+	"location": "westeurope",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "73ef2bff-cf8d-4d5d-b577-ad2f48a802c6",
+		"tenantId": "fd23b9f2-d676-4415-9e84-6ba68fc6ec3b"
+	}
+}
