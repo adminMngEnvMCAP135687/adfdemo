@@ -1,0 +1,173 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "adfworkshopSG"
+		},
+		"ADLS_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://penduickadls.dfs.core.windows.net/"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/ADLS')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('ADLS_properties_typeProperties_url')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PQT')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ADLS",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "weather_points.parquet",
+						"folderPath": "silver/weather_points",
+						"fileSystem": "weather"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": [
+					{
+						"name": "dt",
+						"type": "INT64"
+					},
+					{
+						"name": "sunrise",
+						"type": "INT64"
+					},
+					{
+						"name": "sunset",
+						"type": "INT64"
+					},
+					{
+						"name": "temp",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "feels_like",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "pressure",
+						"type": "INT32"
+					},
+					{
+						"name": "humidity",
+						"type": "INT32"
+					},
+					{
+						"name": "dew_point",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "clouds",
+						"type": "INT32"
+					},
+					{
+						"name": "wind_speed",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "wind_deg",
+						"type": "INT32"
+					},
+					{
+						"name": "wind_gust",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "lat",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "lon",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "timezone",
+						"type": "UTF8"
+					},
+					{
+						"name": "timezone_offset",
+						"type": "INT64"
+					},
+					{
+						"name": "FilePath",
+						"type": "UTF8"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ADLS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline1')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Lookup1",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "ParquetSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								}
+							},
+							"dataset": {
+								"referenceName": "PQT",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/PQT')]"
+			]
+		}
+	]
+}
