@@ -1,0 +1,90 @@
+{
+	"name": "PQT",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ADLS",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "weather_points.parquet",
+				"folderPath": "silver/weather_points",
+				"fileSystem": "weather"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "dt",
+				"type": "INT64"
+			},
+			{
+				"name": "sunrise",
+				"type": "INT64"
+			},
+			{
+				"name": "sunset",
+				"type": "INT64"
+			},
+			{
+				"name": "temp",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "feels_like",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "pressure",
+				"type": "INT32"
+			},
+			{
+				"name": "humidity",
+				"type": "INT32"
+			},
+			{
+				"name": "dew_point",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "clouds",
+				"type": "INT32"
+			},
+			{
+				"name": "wind_speed",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "wind_deg",
+				"type": "INT32"
+			},
+			{
+				"name": "wind_gust",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "lat",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "lon",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "timezone",
+				"type": "UTF8"
+			},
+			{
+				"name": "timezone_offset",
+				"type": "INT64"
+			},
+			{
+				"name": "FilePath",
+				"type": "UTF8"
+			}
+		]
+	}
+}
