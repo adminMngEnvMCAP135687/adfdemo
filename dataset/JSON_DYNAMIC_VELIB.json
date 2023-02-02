@@ -5,16 +5,25 @@
 			"referenceName": "LS_BLOB_VELIB",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"p_dynamic": {
+				"type": "string",
+				"defaultValue": "zz"
+			}
+		},
 		"annotations": [],
 		"type": "Json",
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
 				"fileName": {
-					"value": "@concat(\n'station_information'\n,substring(utcnow(),0,4)\n,substring(utcnow(),5,2)\n,substring(utcnow(),8,2)\n,'.json'\n)",
+					"value": "@concat(\ndataset().p_dynamic\n,substring(utcnow(),0,4)\n,substring(utcnow(),5,2)\n,substring(utcnow(),8,2)\n,substring(utcnow(),11,2)\n,substring(utcnow(),14,2)\n,substring(utcnow(),17,2)\n,'.json'\n)",
 					"type": "Expression"
 				},
-				"container": "information"
+				"container": {
+					"value": "@dataset().p_dynamic",
+					"type": "Expression"
+				}
 			}
 		},
 		"schema": {}

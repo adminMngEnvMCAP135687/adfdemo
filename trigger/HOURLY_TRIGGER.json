@@ -1,0 +1,27 @@
+{
+	"name": "HOURLY_TRIGGER",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "GET VELIB DYNAMIC",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"subject": "information"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Hour",
+				"interval": 1,
+				"startTime": "2023-02-02T11:00:00Z",
+				"timeZone": "UTC"
+			}
+		}
+	}
+}
