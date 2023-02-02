@@ -10,7 +10,10 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "station_information.json",
+				"fileName": {
+					"value": "@concat(\n'station_information'\n,substring(utcnow(),0,4)\n,substring(utcnow(),5,2)\n,substring(utcnow(),8,2)\n,'.json'\n)",
+					"type": "Expression"
+				},
 				"container": "information"
 			}
 		},
