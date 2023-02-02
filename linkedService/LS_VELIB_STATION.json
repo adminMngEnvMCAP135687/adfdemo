@@ -10,7 +10,7 @@
 		"annotations": [],
 		"type": "RestService",
 		"typeProperties": {
-			"url": "@{concat('https://velib-metropole-opendata.smoove.pro/opendata/Velib_Metropole/', linkedService().p_api_extension)}",
+			"url": "@{concat('https://velib-metropole-opendata.smoove.pro/opendata/Velib_Metropole/',linkedService().p_api_extension)}",
 			"enableServerCertificateValidation": true,
 			"authenticationType": "Anonymous"
 		}
