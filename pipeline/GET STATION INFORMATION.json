@@ -1,0 +1,60 @@
+{
+	"name": "GET STATION INFORMATION",
+	"properties": {
+		"activities": [
+			{
+				"name": "COPY FROM API TO DATALAKE",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "RestSource",
+						"httpRequestTimeout": "00:01:40",
+						"requestInterval": "00.00:00:00.010",
+						"requestMethod": "GET",
+						"paginationRules": {
+							"supportRFC5988": "true"
+						}
+					},
+					"sink": {
+						"type": "JsonSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						},
+						"formatSettings": {
+							"type": "JsonWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "REST_DYNAMIC_VELIB",
+						"type": "DatasetReference",
+						"parameters": {
+							"p_api_extension": "station_information.json"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "JSON_DYNAMIC_VELIB",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"folder": {
+			"name": "VELIB/FROM API TO DATALAKE"
+		},
+		"annotations": []
+	}
+}

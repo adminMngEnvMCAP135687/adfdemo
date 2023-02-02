@@ -1,0 +1,27 @@
+{
+	"name": "REST_DYNAMIC_VELIB",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_VELIB_STATION",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"p_api_extension": {
+					"value": "@dataset().p_api_extension",
+					"type": "Expression"
+				}
+			}
+		},
+		"parameters": {
+			"p_api_extension": {
+				"type": "string",
+				"defaultValue": "zz"
+			}
+		},
+		"annotations": [],
+		"type": "RestResource",
+		"typeProperties": {
+			"relativeUrl": ""
+		},
+		"schema": []
+	}
+}
