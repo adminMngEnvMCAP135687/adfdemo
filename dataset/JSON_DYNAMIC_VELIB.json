@@ -1,0 +1,19 @@
+{
+	"name": "JSON_DYNAMIC_VELIB",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_BLOB_VELIB",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "station_information.json",
+				"container": "information"
+			}
+		},
+		"schema": {}
+	}
+}
