@@ -5,8 +5,26 @@
 		"factoryName": {
 			"value": "adfworkshopSG"
 		},
+		"LS_BLOB_srcviguyonv_connectionString": {
+			"value": ""
+		},
+		"LS_BLOB_SNCF_connectionString": {
+			"value": ""
+		},
+		"LS_BLOB_VELIB_connectionString": {
+			"value": ""
+		},
 		"ADLS_properties_typeProperties_url": {
 			"value": "https://penduickadls.dfs.core.windows.net/"
+		},
+		"LS_VELIB_STATION_properties_typeProperties_url": {
+			"value": "@{concat('https://velib-metropole-opendata.smoove.pro/opendata/Velib_Metropole/',linkedService().p_api_extension)}"
+		},
+		"HOURLY_TRIGGER_properties_GET VELIB DYNAMIC_parameters_subject": {
+			"value": "information"
+		},
+		"2MINUTE_TRIGGER_properties_GET VELIB DYNAMIC_parameters_subject": {
+			"value": "status"
 		},
 		"containerUri": {
 			"value": ""

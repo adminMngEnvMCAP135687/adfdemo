@@ -7,9 +7,33 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "adfworkshopSG"
 		},
+		"LS_BLOB_srcviguyonv_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'LS_BLOB_srcviguyonv'"
+		},
+		"LS_BLOB_SNCF_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'LS_BLOB_SNCF'"
+		},
+		"LS_BLOB_VELIB_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'LS_BLOB_VELIB'"
+		},
 		"ADLS_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://penduickadls.dfs.core.windows.net/"
+		},
+		"LS_VELIB_STATION_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "@{concat('https://velib-metropole-opendata.smoove.pro/opendata/Velib_Metropole/',linkedService().p_api_extension)}"
+		},
+		"HOURLY_TRIGGER_properties_GET VELIB DYNAMIC_parameters_subject": {
+			"type": "string",
+			"defaultValue": "information"
+		},
+		"2MINUTE_TRIGGER_properties_GET VELIB DYNAMIC_parameters_subject": {
+			"type": "string",
+			"defaultValue": "status"
 		},
 		"containerUri": {
 			"type": "string",
@@ -38,8 +62,26 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
+					"LS_BLOB_srcviguyonv_connectionString": {
+						"value": "[parameters('LS_BLOB_srcviguyonv_connectionString')]"
+					},
+					"LS_BLOB_SNCF_connectionString": {
+						"value": "[parameters('LS_BLOB_SNCF_connectionString')]"
+					},
+					"LS_BLOB_VELIB_connectionString": {
+						"value": "[parameters('LS_BLOB_VELIB_connectionString')]"
+					},
 					"ADLS_properties_typeProperties_url": {
 						"value": "[parameters('ADLS_properties_typeProperties_url')]"
+					},
+					"LS_VELIB_STATION_properties_typeProperties_url": {
+						"value": "[parameters('LS_VELIB_STATION_properties_typeProperties_url')]"
+					},
+					"HOURLY_TRIGGER_properties_GET VELIB DYNAMIC_parameters_subject": {
+						"value": "[parameters('HOURLY_TRIGGER_properties_GET VELIB DYNAMIC_parameters_subject')]"
+					},
+					"2MINUTE_TRIGGER_properties_GET VELIB DYNAMIC_parameters_subject": {
+						"value": "[parameters('2MINUTE_TRIGGER_properties_GET VELIB DYNAMIC_parameters_subject')]"
 					}
 				}
 			},

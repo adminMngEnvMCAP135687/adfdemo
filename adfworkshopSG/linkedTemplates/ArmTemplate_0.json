@@ -7,9 +7,33 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "adfworkshopSG"
 		},
+		"LS_BLOB_srcviguyonv_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'LS_BLOB_srcviguyonv'"
+		},
+		"LS_BLOB_SNCF_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'LS_BLOB_SNCF'"
+		},
+		"LS_BLOB_VELIB_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'LS_BLOB_VELIB'"
+		},
 		"ADLS_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://penduickadls.dfs.core.windows.net/"
+		},
+		"LS_VELIB_STATION_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "@{concat('https://velib-metropole-opendata.smoove.pro/opendata/Velib_Metropole/',linkedService().p_api_extension)}"
+		},
+		"HOURLY_TRIGGER_properties_GET VELIB DYNAMIC_parameters_subject": {
+			"type": "string",
+			"defaultValue": "information"
+		},
+		"2MINUTE_TRIGGER_properties_GET VELIB DYNAMIC_parameters_subject": {
+			"type": "string",
+			"defaultValue": "status"
 		}
 	},
 	"variables": {
@@ -30,133 +54,142 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/pipeline2')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
+			"name": "[concat(parameters('factoryName'), '/LS_BLOB_srcviguyonv')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"activities": [
-					{
-						"name": "Wait1",
-						"type": "Wait",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"waitTimeInSeconds": 1
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"annotations": []
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('LS_BLOB_srcviguyonv_connectionString')]"
+				}
 			},
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/PQT')]",
+			"name": "[concat(parameters('factoryName'), '/LS_BLOB_SNCF')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('LS_BLOB_SNCF_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LS_VELIB_STATION')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"parameters": {
+					"p_api_extension": {
+						"type": "string",
+						"defaultValue": "xx"
+					}
+				},
+				"annotations": [],
+				"type": "RestService",
+				"typeProperties": {
+					"url": "[parameters('LS_VELIB_STATION_properties_typeProperties_url')]",
+					"enableServerCertificateValidation": true,
+					"authenticationType": "Anonymous"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LS_BLOB_VELIB')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('LS_BLOB_VELIB_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/REST_DYNAMIC_VELIB')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "ADLS",
-					"type": "LinkedServiceReference"
+					"referenceName": "LS_VELIB_STATION",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"p_api_extension": {
+							"value": "@dataset().p_api_extension",
+							"type": "Expression"
+						}
+					}
+				},
+				"parameters": {
+					"p_api_extension": {
+						"type": "string",
+						"defaultValue": "zz"
+					}
 				},
 				"annotations": [],
-				"type": "Parquet",
+				"type": "RestResource",
 				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": "weather_points.parquet",
-						"folderPath": "silver/weather_points",
-						"fileSystem": "weather"
-					},
-					"compressionCodec": "snappy"
+					"relativeUrl": ""
 				},
-				"schema": [
-					{
-						"name": "dt",
-						"type": "INT64"
-					},
-					{
-						"name": "sunrise",
-						"type": "INT64"
-					},
-					{
-						"name": "sunset",
-						"type": "INT64"
-					},
-					{
-						"name": "temp",
-						"type": "DOUBLE"
-					},
-					{
-						"name": "feels_like",
-						"type": "DOUBLE"
-					},
-					{
-						"name": "pressure",
-						"type": "INT32"
-					},
-					{
-						"name": "humidity",
-						"type": "INT32"
-					},
-					{
-						"name": "dew_point",
-						"type": "DOUBLE"
-					},
-					{
-						"name": "clouds",
-						"type": "INT32"
-					},
-					{
-						"name": "wind_speed",
-						"type": "DOUBLE"
-					},
-					{
-						"name": "wind_deg",
-						"type": "INT32"
-					},
-					{
-						"name": "wind_gust",
-						"type": "DOUBLE"
-					},
-					{
-						"name": "lat",
-						"type": "DOUBLE"
-					},
-					{
-						"name": "lon",
-						"type": "DOUBLE"
-					},
-					{
-						"name": "timezone",
-						"type": "UTF8"
-					},
-					{
-						"name": "timezone_offset",
-						"type": "INT64"
-					},
-					{
-						"name": "FilePath",
-						"type": "UTF8"
-					}
-				]
+				"schema": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/ADLS')]"
+				"[concat(variables('factoryId'), '/linkedServices/LS_VELIB_STATION')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/pipeline1')]",
+			"name": "[concat(parameters('factoryName'), '/JSON_DYNAMIC_VELIB')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_BLOB_VELIB",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"p_dynamic": {
+						"type": "string",
+						"defaultValue": "zz"
+					}
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@concat(\ndataset().p_dynamic\n,substring(utcnow(),0,4)\n,substring(utcnow(),5,2)\n,substring(utcnow(),8,2)\n,substring(utcnow(),11,2)\n,substring(utcnow(),14,2)\n,substring(utcnow(),17,2)\n,'.json'\n)",
+							"type": "Expression"
+						},
+						"container": {
+							"value": "@dataset().p_dynamic",
+							"type": "Expression"
+						}
+					}
+				},
+				"schema": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_BLOB_VELIB')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/GET VELIB DYNAMIC')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "Lookup1",
-						"type": "Lookup",
+						"name": "COPY FROM API TO DATALAKE",
+						"type": "Copy",
 						"dependsOn": [],
 						"policy": {
 							"timeout": "0.12:00:00",
@@ -168,29 +201,133 @@
 						"userProperties": [],
 						"typeProperties": {
 							"source": {
-								"type": "ParquetSource",
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"recursive": true,
-									"enablePartitionDiscovery": false
+								"type": "RestSource",
+								"httpRequestTimeout": "00:01:40",
+								"requestInterval": "00.00:00:00.010",
+								"requestMethod": "GET",
+								"paginationRules": {
+									"supportRFC5988": "true"
 								}
 							},
-							"dataset": {
-								"referenceName": "PQT",
+							"sink": {
+								"type": "JsonSink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								},
+								"formatSettings": {
+									"type": "JsonWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "REST_DYNAMIC_VELIB",
 								"type": "DatasetReference",
-								"parameters": {}
+								"parameters": {
+									"p_api_extension": {
+										"value": "@concat('station_',pipeline().parameters.subject,'.json')",
+										"type": "Expression"
+									}
+								}
 							}
-						}
+						],
+						"outputs": [
+							{
+								"referenceName": "JSON_DYNAMIC_VELIB",
+								"type": "DatasetReference",
+								"parameters": {
+									"p_dynamic": {
+										"value": "@pipeline().parameters.subject",
+										"type": "Expression"
+									}
+								}
+							}
+						]
 					}
 				],
 				"policy": {
 					"elapsedTimeMetric": {},
 					"cancelAfter": {}
 				},
+				"parameters": {
+					"subject": {
+						"type": "string",
+						"defaultValue": "zz"
+					}
+				},
+				"folder": {
+					"name": "VELIB/FROM API TO DATALAKE"
+				},
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/PQT')]"
+				"[concat(variables('factoryId'), '/datasets/REST_DYNAMIC_VELIB')]",
+				"[concat(variables('factoryId'), '/datasets/JSON_DYNAMIC_VELIB')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/HOURLY_TRIGGER')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "GET VELIB DYNAMIC",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"subject": "[parameters('HOURLY_TRIGGER_properties_GET VELIB DYNAMIC_parameters_subject')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Hour",
+						"interval": 1,
+						"startTime": "2023-02-02T11:00:00Z",
+						"timeZone": "UTC"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/GET VELIB DYNAMIC')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/2MINUTE_TRIGGER')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "GET VELIB DYNAMIC",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"subject": "[parameters('2MINUTE_TRIGGER_properties_GET VELIB DYNAMIC_parameters_subject')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Minute",
+						"interval": 2,
+						"startTime": "2023-02-02T10:59:00Z",
+						"timeZone": "UTC"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/GET VELIB DYNAMIC')]"
 			]
 		}
 	]
