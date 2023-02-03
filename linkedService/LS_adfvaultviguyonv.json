@@ -1,0 +1,10 @@
+{
+	"name": "LS_adfvaultviguyonv",
+	"properties": {
+		"annotations": [],
+		"type": "AzureKeyVault",
+		"typeProperties": {
+			"baseUrl": "https://adfvaultviguyonv.vault.azure.net/"
+		}
+	}
+}
