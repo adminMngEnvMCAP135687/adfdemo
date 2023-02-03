@@ -1,0 +1,12 @@
+{
+	"name": "SQL10_ReportServer",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SQL10",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": []
+	}
+}
